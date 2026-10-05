@@ -1,0 +1,32 @@
+name: CI Suma Python
+
+on:
+  push:
+    branches: [ "main", "feature/leidy" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  sumar-en-python:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Descargar el código del repositorio
+    - name: Checkout repositorio
+      uses: actions/checkout@v4
+
+    # 2. Configurar e instalar Python
+    - name: Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    # 3. Ejecutar script de prueba con una suma
+    - name: Ejecutar suma en Python
+      run: |
+        python -c "
+        num1 = 50
+        num2 = 25
+        suma = num1 + num2
+        print(f'¡Hola Leidy! El resultado de la suma es: {num1} + {num2} = {suma}')
+        "
