@@ -35,3 +35,11 @@ jobs:
       - name: Desplegar en GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Mostrar el Link Directo en los Registros
+        run: |
+          echo "===================================================="
+          echo " 🎉 ¡Despliegue exitoso!"
+          echo " Haz clic en el siguiente enlace para abrir tu pagina:"
+          echo " 👉 ${{ steps.deployment.outputs.page_url }}"
+          echo "===================================================="
