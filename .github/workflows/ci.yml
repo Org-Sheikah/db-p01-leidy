@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Ejecutar script de Python para crear la web
+      - name: Ejecutar script para crear index.html
         run: python src/suma.py
 
       - name: Configurar Pages
@@ -36,10 +36,8 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Mostrar el Link Directo en los Registros
+      - name: Mostrar Link en la pantalla de Resumen
         run: |
-          echo "===================================================="
-          echo " 🎉 ¡Despliegue exitoso!"
-          echo " Haz clic en el siguiente enlace para abrir tu pagina:"
-          echo " 👉 ${{ steps.deployment.outputs.page_url }}"
-          echo "===================================================="
+          echo "### 🎉 ¡Despliegue Exitoso!" >> $GITHUB_STEP_SUMMARY
+          echo "Haz clic en el enlace de abajo para abrir tu calculadora en una pestaña nueva:" >> $GITHUB_STEP_SUMMARY
+          echo "👉 **[ABRIR CALCULADORA WEB](https://Org-Sheikah.github.io/db-p01-leidy/)**" >> $GITHUB_STEP_SUMMARY
