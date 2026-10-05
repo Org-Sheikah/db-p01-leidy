@@ -2,7 +2,7 @@ name: CI Python Web Server
 
 on:
   push:
-    branches: [ "main", "feature/**" ]
+    branches: [ "main", "feature/leidy" ]
   pull_request:
     branches: [ "main" ]
 
