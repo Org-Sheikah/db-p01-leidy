@@ -1,37 +1,37 @@
-name: CI Python Web Server
+name: Desplegar Calculadora Web
 
 on:
   push:
     branches: [ "main", "feature/leidy" ]
-  pull_request:
-    branches: [ "main" ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  verificar-servidor:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repositorio
-      uses: actions/checkout@v4
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
 
-    - name: Configurar Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-    - name: Instalar Node.js (para el túnel web)
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+      - name: Ejecutar script de Python para crear la web
+        run: python src/suma.py
 
-    - name: Levantar servidor y generar link público
-      run: |
-        # 1. Iniciar el servidor de Python en segundo plano
-        python src/suma.py &
-        sleep 2
-        
-        # 2. Instalar y ejecutar localtunnel para obtener una URL pública
-        npx localtunnel --port 8000 &
-        
-        # Esperar unos segundos a que se genere el enlace en los logs
-        sleep 6
+      - name: Configurar Pages
+        uses: actions/configure-pages@v4
+
+      - name: Subir artefacto
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Desplegar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
