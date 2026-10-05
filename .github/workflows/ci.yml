@@ -23,3 +23,11 @@ jobs:
       run: |
         python -c "import src.suma" || python src/suma.py &
         echo "Script verificado correctamente."
+
+    - name: Mostrar direccion local de la pagina web
+      run: |
+        echo "===================================================="
+        echo " ¡Servidor listo para pruebas locales!"
+        echo " Direccion web de acceso: http://localhost:8000"
+        echo " Ejecuta 'python src/suma.py' en tu PC para abrirla."
+        echo "===================================================="
