@@ -19,15 +19,19 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Probar ejecucion del script
-      run: |
-        python -c "import src.suma" || python src/suma.py &
-        echo "Script verificado correctamente."
+    - name: Instalar Node.js (para el túnel web)
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
 
-    - name: Mostrar direccion local de la pagina web
+    - name: Levantar servidor y generar link público
       run: |
-        echo "===================================================="
-        echo " ¡Servidor listo para pruebas locales!"
-        echo " Direccion web de acceso: http://localhost:8000"
-        echo " Ejecuta 'python src/suma.py' en tu PC para abrirla."
-        echo "===================================================="
+        # 1. Iniciar el servidor de Python en segundo plano
+        python src/suma.py &
+        sleep 2
+        
+        # 2. Instalar y ejecutar localtunnel para obtener una URL pública
+        npx localtunnel --port 8000 &
+        
+        # Esperar unos segundos a que se genere el enlace en los logs
+        sleep 6
