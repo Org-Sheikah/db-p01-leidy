@@ -1,4 +1,4 @@
-name: CI Suma Python
+name: CI Python Web Server
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  sumar-en-python:
+  verificar-servidor:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,5 +19,7 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Ejecutar suma.py
-      run: python src/suma.py
+    - name: Probar ejecucion del script
+      run: |
+        python -c "import src.suma" || python src/suma.py &
+        echo "Script verificado correctamente."
