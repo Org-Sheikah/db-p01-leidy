@@ -1,4 +1,4 @@
-name: Desplegar Calculadora Web y Render
+name: Desplegar Calculadora Web
 
 on:
   push:
@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   deploy:
+    name: Despliegue Paralelo (Pages + Render)
     runs-on: ubuntu-latest
     
     environment:
@@ -31,7 +32,7 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      # 1. GENERACIÓN Y DESPLIEGUE EN GITHUB PAGES
+      # 1. GENERAR Y DESPLEGAR EN GITHUB PAGES
       - name: Generar Calculadora con Django
         run: |
           mkdir public
@@ -48,19 +49,16 @@ jobs:
         uses: actions/deploy-pages@v4
 
       # 2. DISPARAR DESPLIEGUE EN RENDER
-      - name: Notificar a Render para iniciar el despliegue
+      - name: Notificar a Render
         run: |
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
 
       # 3. MOSTRAR AMBOS ENLACES EN EL SUMMARY
-      - name: Generar enlaces en el Summary
+      - name: Publicar enlaces en el Summary
         run: |
-          echo "🎉 **¡Despliegues Iniciados Exitosamente!**" >> $GITHUB_STEP_SUMMARY
+          echo "## 🚀 Enlaces de Despliegue de la Calculadora" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Haz clic en cualquiera de los siguientes enlaces para ver tu aplicación:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "1. 🌐 **Despliegue GitHub Pages:**" >> $GITHUB_STEP_SUMMARY
-          echo "👉 [**ABRIR EN GITHUB PAGES**](${{ steps.deployment.outputs.page_url }})" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "2. 🚀 **Despliegue Django en Render:**" >> $GITHUB_STEP_SUMMARY
-          echo "👉 [**ABRIR EN RENDER**](https://db-p01-leidy.onrender.com)" >> $GITHUB_STEP_SUMMARY
+          echo "| Entorno | Enlace Directo |" >> $GITHUB_STEP_SUMMARY
+          echo "| :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🌐 **GitHub Pages** | [Abrir Calculadora](${{ steps.deployment.outputs.page_url }}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🐍 **Render (Django)** | [Abrir Calculadora](https://db-p01-leidy.onrender.com) |" >> $GITHUB_STEP_SUMMARY
