@@ -1,11 +1,10 @@
-name: Desplegar Calculadora Web
+name: Desplegar Calculadora Web y Render
 
 on:
   push:
     branches:
       - feature/leidy
 
-# Permisos requeridos para poder publicar en GitHub Pages
 permissions:
   contents: read
   pages: write
@@ -15,7 +14,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     
-    # Entorno necesario para el despliegue
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -29,10 +27,11 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Instalar Django
+      - name: Instalar dependencias
         run: |
-          pip install django
+          pip install -r requirements.txt
 
+      # 1. GENERACIÓN Y DESPLIEGUE EN GITHUB PAGES
       - name: Generar Calculadora con Django
         run: |
           mkdir public
@@ -48,9 +47,20 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Generar link directo en el Summary
+      # 2. DISPARAR DESPLIEGUE EN RENDER
+      - name: Notificar a Render para iniciar el despliegue
         run: |
-          echo "🎉 **¡Despliegue Exitoso!**" >> $GITHUB_STEP_SUMMARY
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+
+      # 3. MOSTRAR AMBOS ENLACES EN EL SUMMARY
+      - name: Generar enlaces en el Summary
+        run: |
+          echo "🎉 **¡Despliegues Iniciados Exitosamente!**" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Haz clic en el enlace de abajo para abrir tu calculadora en una pestaña nueva:" >> $GITHUB_STEP_SUMMARY
-          echo "👉 [**ABRIR CALCULADORA WEB**](${{ steps.deployment.outputs.page_url }})" >> $GITHUB_STEP_SUMMARY
+          echo "Haz clic en cualquiera de los siguientes enlaces para ver tu aplicación:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "1. 🌐 **Despliegue GitHub Pages:**" >> $GITHUB_STEP_SUMMARY
+          echo "👉 [**ABRIR EN GITHUB PAGES**](${{ steps.deployment.outputs.page_url }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "2. 🚀 **Despliegue Django en Render:**" >> $GITHUB_STEP_SUMMARY
+          echo "👉 [**ABRIR EN RENDER**](https://db-p01-leidy.onrender.com)" >> $GITHUB_STEP_SUMMARY
