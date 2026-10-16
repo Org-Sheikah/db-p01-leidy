@@ -1,3 +1,5 @@
-from django.shortcuts import render
+from django.http import HttpResponse
+from suma import html_content
 
-# Create your views here.
+def vista_suma(request):
+    return HttpResponse(html_content)
