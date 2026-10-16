@@ -11,8 +11,9 @@ permissions:
   id-token: write
 
 jobs:
-  deploy:
-    name: Despliegue Paralelo (Pages + Render)
+  # 1. Primera tarjeta: GitHub Pages (Estático)
+  github-pages:
+    name: GitHub Pages (Estático)
     runs-on: ubuntu-latest
     
     environment:
@@ -32,7 +33,6 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      # 1. GENERAR Y DESPLEGAR EN GITHUB PAGES
       - name: Generar Calculadora con Django
         run: |
           mkdir public
@@ -48,17 +48,19 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      # 2. DISPARAR DESPLIEGUE EN RENDER
+  # 2. Segunda tarjeta: Render Django (Dinámico)
+  render-django:
+    name: Render Django (Dinámico)
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: github-pages
+      url: https://db-p01-leidy.onrender.com
+      
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
       - name: Notificar a Render
         run: |
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
-
-      # 3. MOSTRAR AMBOS ENLACES EN EL SUMMARY
-      - name: Publicar enlaces en el Summary
-        run: |
-          echo "## 🚀 Enlaces de Despliegue de la Calculadora" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Entorno | Enlace Directo |" >> $GITHUB_STEP_SUMMARY
-          echo "| :--- | :--- |" >> $GITHUB_STEP_SUMMARY
-          echo "| 🌐 **GitHub Pages** | [Abrir Calculadora](${{ steps.deployment.outputs.page_url }}) |" >> $GITHUB_STEP_SUMMARY
-          echo "| 🐍 **Render (Django)** | [Abrir Calculadora](https://db-p01-leidy.onrender.com) |" >> $GITHUB_STEP_SUMMARY
