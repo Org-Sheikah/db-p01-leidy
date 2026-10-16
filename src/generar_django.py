@@ -4,7 +4,6 @@ import django
 from django.conf import settings
 from django.template import Template, Context
 
-# Configuración mínima de Django en ejecución directa
 if not settings.configured:
     settings.configure(
         TEMPLATES=[{
@@ -15,7 +14,6 @@ if not settings.configured:
     )
     django.setup()
 
-# Plantilla HTML con sintaxis de Django (CSS + HTML + JS de la suma)
 django_template_code = """
 <!DOCTYPE html>
 <html lang="es">
@@ -90,13 +88,11 @@ django_template_code = """
 </html>
 """
 
-# Renderizado con el motor de plantillas de Django
 template = Template(django_template_code)
 context = Context({'titulo': 'Calculadora generada con Django'})
 output_html = template.render(context)
 
-# Guardar en el archivo HTML principal
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(output_html)
 
-print("¡index.html generado exitosamente usando el motor de Django!")
+print("¡index.html generado exitosamente con Django!")

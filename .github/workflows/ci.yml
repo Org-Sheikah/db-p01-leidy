@@ -29,11 +29,15 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Generar Calculadora con Python
+      - name: Instalar Django
+        run: |
+          pip install django
+
+      - name: Generar Calculadora con Django
         run: |
           mkdir public
           cd public
-          python ../src/suma.py
+          python ../src/generar_django.py
 
       - name: Subir artefactos
         uses: actions/upload-pages-artifact@v3
